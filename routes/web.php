@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use Laravel\Socialite\Facades\Socialite;
+use App\Http\Controllers\Auth\SocialiteController; // Pastikan Anda membuat controller ini
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,3 +17,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+
+Route::get('/login/google', [SocialiteController::class, 'redirectToGoogle'])->name('login.google');
+Route::get('/login/google/callback', [SocialiteController::class, 'handleGoogleCallback']);
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
