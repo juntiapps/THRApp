@@ -5,6 +5,8 @@ use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\Auth\SocialiteController; // Pastikan Anda membuat controller ini
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
+use App\Http\Controllers\Admin\Master\MasterEwalletController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\User\DashboardController as UserDashboard;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,6 +20,7 @@ use Illuminate\Support\Facades\Auth;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
 Auth::routes();
 
 Route::get('/', function () {
@@ -28,16 +31,16 @@ Route::get('/login/google', [SocialiteController::class, 'redirectToGoogle'])->n
 Route::get('/login/google/callback', [SocialiteController::class, 'handleGoogleCallback']);
 
 //admin flow
-Route::group(['middleware' => ['auth', 'admin'],'prefix'=>'admin'], function () {
+Route::group(['middleware' => ['auth', 'admin'], 'prefix' => 'admin'], function () {
     Route::get('/home', [AdminDashboard::class, 'index'])->name('admin_home');
+    Route::resource('users',UserController::class)->only(['index','destroy']);
+    Route::group(['prefix' => 'master'], function () {
+        Route::resource('ewallet',MasterEwalletController::class)->except(['show','delete']);
+    });
 });
 
 //user flow
-Route::group(['middleware' => ['auth', 'user',], 'prefix'=>'user'], function () {
+Route::group(['middleware' => ['auth', 'user',], 'prefix' => 'user'], function () {
     Route::get('/home', [UserDashboard::class, 'index'])->name('user_home');
-    // Route::post('/dashboard', [UserDashboard::class, 'create'])->name('url.shorten.user');
-    // Route::post('/dashboard/edit/{id}', [UserDashboard::class, 'update'])->name('update.user');
-    // Route::post('/dashboard/deactivate/{id}', [UserDashboard::class, 'deactivate'])->name('deactivate.user');
-    // Route::post('/dashboard/activate/{id}', [UserDashboard::class, 'activate'])->name('activate.user');
-});
+   });
 Route::get('/home', [HomeController::class, 'index'])->name('home');

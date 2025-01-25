@@ -25,7 +25,7 @@ class AdminAuthenticated
 
             // if user is not admin take him to his dashboard
             if ( $user->hasRole('user') ) {
-                return redirect(route('dashboard'));
+                return redirect(route('home'));
             }
 
             // allow admin to proceed with request
