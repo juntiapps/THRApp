@@ -23,26 +23,28 @@ class SocialiteController extends Controller
     {
         try {
             $user = Socialite::driver('google')->user();
-            // Log::info('Google User Response:', $user->getRaw());
-            // dd($user);
         } catch (\Exception $e) {
-            // dd($e);
             return redirect('/login')->with('error', 'Terjadi kesalahan saat login dengan Google.'); // Redirect ke halaman login dengan pesan error
         }
 
         $findUser = User::where('google_id', $user->id)->first();
 
-        // dd($user->id);
         if ($findUser) {
             Auth::login($findUser);
-            return redirect('/home'); // Redirect ke halaman home setelah login berhasil
+
+            if($findUser->role=='admin'){
+                return redirect('/admin/home'); // Redirect ke halaman home setelah login berhasil
+            } else {
+                return redirect('/user/home'); // Redirect ke halaman home setelah login berhasil
+            }
+            
         } else {
             $newUser = User::create([
                 'name' => $user->name,
                 'email' => $user->email,
                 'google_id' => $user->id,
                 'password' => Hash::make(Str::random(16)),
-                'avatar'=> $user->avatar
+                'avatar' => $user->avatar
                 // tambahkan kolom lain yang diperlukan
             ]);
 
