@@ -5,55 +5,44 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">{{ __('Dashboard') }}</div>
+                    <div class="card-header">{{ __('Project') }}</div>
 
                     <div class="card-body">
-                        @if (session('success'))
-                            <div class="alert alert-success" role="alert">
-                                {{ session('success') }}
-                            </div>
-                        @endif
-
-                        <h5>Selamat Datang, <span style="font-weight:bold">{{ $data['name'] }}</span></h5>
-                        <hr>
-                        <div style="height: 20px"></div>
-                        <a class="border border-primary rounded px-4 py-3" href="{{ route('u.projects.create') }}">
-                            <i class="fas fa-plus"></i>
-                        </a>
                         @if (session('status'))
-                            <div class="alert alert-success my-2" role="alert">
+                            <div class="alert alert-success" role="alert">
                                 {{ session('status') }}
                             </div>
                         @endif
+
+                        {{-- <a href="{{ route('projects.create') }}" class="btn btn-primary">Tambah</a> --}}
+                        {{-- {{ __('You are logged in!') }} --}}
                         <table class="table" id="projects">
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Nama</th>
+                                    <th scope="col">URL</th>
                                     <th scope="col">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($data['projects'] as $index => $item)
+                                @forelse ($data as $index => $item)
                                     <tr>
                                         <td> {{ $index + 1 }}</td>
                                         <td> {{ $item->name }}</td>
+                                        <td> {{ substr($item->url, 0, 6) . '...' }}</td>
+
                                         <td class="text-center">
-                                            <a href="{{ route('u.projects.show', $item->id) }}"
-                                                class="btn btn-sm btn-info">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                            <a href="{{ route('u.projects.edit', $item->id) }}"
-                                                class="btn btn-sm btn-warning">
+                                            {{-- <a href="{{ route('projects.edit', $item->id) }}" class="btn btn-sm btn-warning">
                                                 <i class="fas fa-edit"></i>
-                                            </a>
-                                            <form action="{{ route('u.projects.destroy', $item->id) }}" method="POST"
+                                            </a> --}}
+                                            <form action="{{ route('projects.destroy', $item->id) }}" method="POST"
                                                 style="display: inline-block;">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-sm btn-danger"
                                                     onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
-                                                    <i class="fas fa-trash"></i>
+                                                    <i class="fas fa-trash"></i> 
                                                 </button>
                                             </form>
                                         </td>

@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Ewallet;
+use App\Models\MasterEwallet;
+use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -10,82 +13,181 @@ use AshAllenDesign\ShortURL\Models\ShortURL;
 use AshAllenDesign\ShortURL\Models\ShortURLVisit;
 use AshAllenDesign\ShortURL\Classes\Builder;
 use Carbon\Carbon;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class DashboardController extends Controller
 {
     //
     public function index()
     {
-        // dd($url_visit);
-        return view('user.home');
+        $user = Auth::user();
+        $data['name'] = $user->name;
+        $data['projects'] = Project::where('user_id', $user->id)->get();
+        // $_projects = Project::where('user_id', $user->id)->get();
+        // $projects = $_projects->map(function ($item) {
+        //     $item->url = url("projects/$item->id");
+        //     return $item;
+        // });
+        // $data['projects'] = $projects;
+        return view('user.home', compact('data'));
     }
 
-    // public function create()
-    // {
-    //     DB::beginTransaction();
-    //     // $builder = new \AshAllenDesign\ShortURL\Classes\Builder();
-    //     $builder = new Builder();
+    public function create()
+    {
+        return view('user.projects.create');
+    }
 
+    public function store(Request $request)
+    {
+        $user = Auth::user();
+        $request->validate([
+            'name' => 'required|max:255',
+            'shopee' => 'nullable|url',
+            'dana' => 'nullable|url',
+            'gopay' => 'nullable|url',
+        ]);
 
-    //     $shortURLObject = $builder->destinationUrl(request()->url)->make();
+        if (!$request->shopee && !$request->dana && !$request->gopay) {
+            return redirect()->route('u.projects.create')->with('error', 'Salah satu URL harus diisi!')->with('name', $request->name);
+        }
 
-    //     $me = Auth::user();
+        $data['name'] = $request->input('name');
+        $data['user_id'] = $user->id;
 
-    //     $url = ShortURL::find($shortURLObject->id);
-    //     // dd($url);
+        DB::beginTransaction();
 
-    //     $url->user_id = $me->user_id;
-    //     $url->save();
-    //     db::commit();
+        $project = Project::create($data);
 
+        $project_id = $project->id;
 
-    //     return back()->with('success', 'URL berhasil dipendekkan ');
-    // }
+        if ($request->shopee) {
+            $create_shopee = Ewallet::create([
+                'project_id' => $project_id,
+                'ewallet_id' => 1,
+                'url' => $request->shopee
+            ]);
+        }
 
-    // public function update($id)
-    // {
-    //     DB::beginTransaction();
+        if ($request->dana) {
+            $create_dana = Ewallet::create([
+                'project_id' => $project_id,
+                'ewallet_id' => 2,
+                'url' => $request->dana
+            ]);
+        }
 
-    //     $url = ShortURL::find($id);
-    //     $url->url_key = request()->url;
-    //     $url->destination_url = request()->destination;
-    //     $short = $url->default_short_url;
-    //     $e_short = explode('/', $short);
-    //     $e_short[4] = request()->url;
-    //     $short = implode("/", $e_short);
-    //     // dd($short);
-    //     $url->default_short_url = $short;
-    //     $url->save();
-    //     db::commit();
+        if ($request->gopay) {
+            $create_gopay = Ewallet::create([
+                'project_id' => $project_id,
+                'ewallet_id' => 3,
+                'url' => $request->gopay
+            ]);
+        }
 
-    //     return back()->with('success', 'URL berhasil diperbarui. ');
-    // }
+        DB::commit();
+        return redirect()->route('user_home')->with('success', 'Data berhasil disimpan!');
+    }
 
-    // public function activate($id)
-    // {
-    //     # code...
-    //     DB::beginTransaction();
+    public function show(Project $project)
+    {
+        $project->url = url("projects/$project->id");
+        $project->qr = QrCode::size(200)->generate($project->url);
 
-    //     $url = ShortURL::find($id);
-    //     // $mytime = \Carbon\Carbon::now();
-    //     $url->deactivated_at = null;
-    //     $url->save();
-    //     db::commit();
+        $s = Ewallet::where(['project_id' => $project->id, 'ewallet_id' => 1])->first();
+        $d = Ewallet::where(['project_id' => $project->id, 'ewallet_id' => 2])->first();
+        $g = Ewallet::where(['project_id' => $project->id, 'ewallet_id' => 3])->first();
 
-    //     return back()->with('success', 'URL berhasil dinonaktifkan. ');
-    // }
+        $project->shopee = $s != null ? $s->url : $s;
+        $project->dana = $d != null ? $d->url : $d;
+        $project->gopay = $g != null ? $g->url : $g;
 
-    // public function deactivate($id)
-    // {
-    //     DB::beginTransaction();
+        $data = $project;
+        return view('user.projects.show', compact('data'));
+    }
 
-    //     $url = ShortURL::find($id);
-    //     $mytime = Carbon::now();
-    //     $url->deactivated_at = $mytime;
-    //     $url->save();
-    //     db::commit();
+    public function edit(Project $project)
+    {
+        $s = Ewallet::where(['project_id' => $project->id, 'ewallet_id' => 1])->first();
+        $d = Ewallet::where(['project_id' => $project->id, 'ewallet_id' => 2])->first();
+        $g = Ewallet::where(['project_id' => $project->id, 'ewallet_id' => 3])->first();
 
-    //     return back()->with('success', 'URL berhasil dinonaktifkan. ');
-    //     # code...
-    // }
+        $project->shopee = $s != null ? $s->url : $s;
+        $project->dana = $d != null ? $d->url : $d;
+        $project->gopay = $g != null ? $g->url : $g;
+
+        $data = $project;
+        return view('user.projects.edit', compact('data'));
+    }
+
+    public function update(Request $request, Project $project)
+    {
+        $user = Auth::user();
+        $request->validate([
+            'name' => 'required|max:255',
+            'shopee' => 'nullable|url',
+            'dana' => 'nullable|url',
+            'gopay' => 'nullable|url',
+        ]);
+
+        if (!$request->shopee && !$request->dana && !$request->gopay) {
+            return redirect()->route('u.projects.edit',$project)->with('error', 'Salah satu URL harus diisi!');
+        }
+
+        $data['name'] = $request->input('name');
+        // $data['user_id'] = $user->id;
+
+        
+        DB::beginTransaction();
+        $project_id = $project->id;
+        // dd(Ewallet::where([
+        //     'project_id' => $project_id,
+        //     'ewallet_id' => 2,
+        // ])->first());
+        $update = $project->update($data);
+
+        if ($request->shopee) {
+            $update_shopee = Ewallet::where([
+                'project_id' => $project_id,
+                'ewallet_id' => 1,
+            ])->updateOrInsert([
+                'project_id' => $project_id,
+                'ewallet_id' => 1,
+                'url' => $request->shopee
+            ]);
+        }
+
+        if ($request->dana) {
+            $update_dana = Ewallet::where([
+                'project_id' => $project_id,
+                'ewallet_id' => 2,
+            ])->updateOrInsert([
+                'project_id' => $project_id,
+                'ewallet_id' => 2,
+                'url' => $request->dana
+            ]);
+        }
+
+        if ($request->gopay) {
+            $update_gopay = Ewallet::where([
+                'project_id' => $project_id,
+                'ewallet_id' => 3,
+            ])->updateOrInsert([
+                'project_id' => $project_id,
+                'ewallet_id' => 3,
+                'url' => $request->gopay
+            ]);
+        }
+
+        DB::commit();
+        return redirect()->route('user_home')->with('success', 'Data berhasil diperbarui!');
+    }
+
+    public function destroy(Project $project) {
+        DB::beginTransaction();
+        $delete_ewallet = Ewallet::where('project_id',$project->id)->delete();
+        $delete_project = $project->delete();
+        DB::commit();
+
+        return redirect()->route('user_home')->with('success', 'Data berhasil dihapus!');
+    }
 }
