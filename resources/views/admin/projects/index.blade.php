@@ -8,9 +8,9 @@
                     <div class="card-header">{{ __('Project') }}</div>
 
                     <div class="card-body">
-                        @if (session('status'))
+                        @if (session('success'))
                             <div class="alert alert-success" role="alert">
-                                {{ session('status') }}
+                                {{ session('success') }}
                             </div>
                         @endif
 
@@ -21,7 +21,7 @@
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Nama</th>
-                                    <th scope="col">URL</th>
+                                    <th scope="col">Owner</th>
                                     <th scope="col">Aksi</th>
                                 </tr>
                             </thead>
@@ -30,7 +30,7 @@
                                     <tr>
                                         <td> {{ $index + 1 }}</td>
                                         <td> {{ $item->name }}</td>
-                                        <td> {{ substr($item->url, 0, 6) . '...' }}</td>
+                                        <td> {{ $item->owner}}</td>
 
                                         <td class="text-center">
                                             {{-- <a href="{{ route('projects.edit', $item->id) }}" class="btn btn-sm btn-warning">

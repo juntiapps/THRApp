@@ -8,9 +8,9 @@
                     <div class="card-header">{{ __('Master Ewallet') }}</div>
 
                     <div class="card-body">
-                        @if (session('status'))
+                        @if (session('success'))
                             <div class="alert alert-success" role="alert">
-                                {{ session('status') }}
+                                {{ session('success') }}
                             </div>
                         @endif
 
@@ -21,7 +21,7 @@
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Nama</th>
-                                    <th scope="col">Warna</th>
+                                    <th scope="col">Pratinjau</th>
                                     <th scope="col">Aksi</th>
                                 </tr>
                             </thead>
@@ -31,7 +31,7 @@
                                         <td> {{ $index + 1 }}</td>
                                         <td> {{ $item->name }}</td>
                                         <td
-                                            style="background-color: {{ $item->color }}; color: {{ $item->color === '#000000' ? 'white' : 'black' }}; text-align:center;">
+                                            style="background-color: {{ $item->color }}; color: {{ $item->color2 }}; text-align:center;">
                                             {{ $item->color }}
                                         </td>
                                         <td class="text-center">
@@ -68,7 +68,7 @@
 
 @push('body')
     <script src="//code.jquery.com/jquery-3.7.1.js"></script>
-   <script src="//cdn.datatables.net/2.2.1/js/dataTables.js"></script>
+    <script src="//cdn.datatables.net/2.2.1/js/dataTables.js"></script>
     <script src="//cdn.datatables.net/2.2.1/js/dataTables.bootstrap5.js"></script>
     <script>
         $(document).ready(function() {

@@ -30,14 +30,14 @@ class SocialiteController extends Controller
         $findUser = User::where('google_id', $user->id)->first();
 
         if ($findUser) {
+            $findUser->update(['avatar' => $user->avatar]);
             Auth::login($findUser);
 
-            if($findUser->role=='admin'){
-                return redirect('/admin/home'); // Redirect ke halaman home setelah login berhasil
+            if ($findUser->role == 'admin') {
+                return redirect(route('admin_home')); // Redirect ke halaman home setelah login berhasil
             } else {
-                return redirect('/user/home'); // Redirect ke halaman home setelah login berhasil
+                return redirect(route('user_home')); // Redirect ke halaman home setelah login berhasil
             }
-            
         } else {
             $newUser = User::create([
                 'name' => $user->name,
@@ -49,7 +49,7 @@ class SocialiteController extends Controller
             ]);
 
             Auth::login($newUser);
-            return redirect('/home'); // Redirect ke halaman home setelah registrasi dan login berhasil
+            return redirect(route('user_home')); // Redirect ke halaman home setelah registrasi dan login berhasil
         }
     }
 }

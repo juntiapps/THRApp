@@ -17,19 +17,29 @@
                         <form action="{{ route('ewallet.store') }}" method="post">
                             @csrf
                             <label for="name">Nama:</label><br>
-                            <input class="form-control" type="text" id="name" name="name" value="{{ old('name') }}"><br><br>
+                            <input class="form-control" type="text" id="name" name="name"
+                                value="{{ old('name') }}">
                             @error('name')
                                 <div style="color: red;">{{ $message }}</div>
                             @enderror
-
-                            <label for="color">Pilih Warna:</label><br>
-                            <input type="color" id="color" name="color" 
-                                value="{{ old('color', '#000000') }}"><br><br>
-                            @error('warna')
+                            <br>
+                            <label for="color">Pilih Warna Tombol:</label><br>
+                            <input type="color" id="color" name="color" value="{{ old('color', '#000000') }}">
+                            @error('color')
                                 <div style="color: red;">{{ $message }}</div>
                             @enderror
 
+                            <br><br>
+                            <label for="color">Pilih Warna Label:</label><br>
+                            <input type="color" id="color2" name="color2"
+                                value="{{ old('color2', '#000000') }}"><br><br>
+                            @error('color')
+                                <div style="color: red;">{{ $message }}</div>
+                            @enderror
+                            <br>
                             <button class="form-control btn btn-primary" type="submit">Submit</button>
+                            <a href="{{ route('ewallet.index') }}" class="form-control btn btn-secondary mt-3">Batal</a>
+
                         </form>
                     </div>
                 </div>

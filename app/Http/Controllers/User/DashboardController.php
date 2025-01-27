@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Ewallet;
 use App\Models\MasterEwallet;
 use App\Models\Project;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -130,13 +131,13 @@ class DashboardController extends Controller
         ]);
 
         if (!$request->shopee && !$request->dana && !$request->gopay) {
-            return redirect()->route('u.projects.edit',$project)->with('error', 'Salah satu URL harus diisi!');
+            return redirect()->route('u.projects.edit', $project)->with('error', 'Salah satu URL harus diisi!');
         }
 
         $data['name'] = $request->input('name');
         // $data['user_id'] = $user->id;
 
-        
+
         DB::beginTransaction();
         $project_id = $project->id;
         // dd(Ewallet::where([
@@ -182,12 +183,49 @@ class DashboardController extends Controller
         return redirect()->route('user_home')->with('success', 'Data berhasil diperbarui!');
     }
 
-    public function destroy(Project $project) {
+    public function destroy(Project $project)
+    {
         DB::beginTransaction();
-        $delete_ewallet = Ewallet::where('project_id',$project->id)->delete();
+        $delete_ewallet = Ewallet::where('project_id', $project->id)->delete();
         $delete_project = $project->delete();
         DB::commit();
 
         return redirect()->route('user_home')->with('success', 'Data berhasil dihapus!');
+    }
+
+    public function setting()
+    {
+        $data = Auth::user();
+        return view('user.setting', compact('data'));
+    }
+
+    public function deleteUser(Request $request)
+    {
+        $user = Auth::user();
+
+        // dd($user);
+        DB::beginTransaction();
+
+        $projects = Project::where('user_id', $user->id)->get();
+
+        // dd($projects);
+        foreach ($projects as $key => $project) {
+            $delete_ewallet = Ewallet::where('project_id', $project->id)->delete();
+        }
+
+        if(count($projects)>0){
+            $projects->delete();
+        }
+
+        $user->delete();
+
+        DB::commit();
+
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/')->with('success', 'Akun Anda berhasil dihapus.');
     }
 }

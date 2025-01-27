@@ -29,15 +29,23 @@
                             @method('PUT')
                             <label for="name">Nama:</label><br>
                             <input class="form-control" type="text" id="name" name="name"
-                                value="{{ old('name', $data->name) }}"><br><br>
+                                value="{{ old('name', $data->name) }}">
                             @error('name')
                                 <div style="color: red;">{{ $message }}</div>
                             @enderror
 
-                            <label for="color">Pilih Warna:</label><br>
-                            <input type="color" id="color" name="color"
-                                value="{{ old('color', $data->color) }}"><br><br>
-                            @error('warna')
+                            <br>
+                            <label for="color">Pilih Warna Tombol:</label><br>
+                            <input type="color" id="color" name="color" value="{{ old('color', $data->color) }}">
+                            @error('color')
+                                <div style="color: red;">{{ $message }}</div>
+                            @enderror
+
+                            <br><br>
+                            <label for="color">Pilih Warna Label:</label><br>
+                            <input type="color" id="color2" name="color2"
+                                value="{{ old('color2', $data->color2) }}"><br><br>
+                            @error('color')
                                 <div style="color: red;">{{ $message }}</div>
                             @enderror
 

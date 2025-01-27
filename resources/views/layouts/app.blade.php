@@ -24,8 +24,7 @@
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 @guest
-                    <a class="navbar-brand"
-                        href="">
+                    <a class="navbar-brand" href="">
                         {{ config('app.name', 'Laravel') }}
                     </a>
                 @else
@@ -90,12 +89,20 @@
                                 </li>
                             @endif
                             <li class="nav-item dropdown">
+
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" role="button"
                                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    <img src="{{ Auth::user()->avatar }}" class="rounded-circle me-2" width="20"
+                                        height="20">
                                     {{ Auth::user()->name }}
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    @if (Auth::user()->role == 'user')
+                                        <a class="dropdown-item" href="{{ route('u.setting') }}">
+                                            {{ __('Setting') }}
+                                        </a>
+                                    @endif
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                         onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
@@ -105,6 +112,8 @@
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                         @csrf
                                     </form>
+
+
                                 </div>
                             </li>
                         @endguest

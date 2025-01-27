@@ -15,38 +15,47 @@
                         @endif
 
                         <div class="container">
-                            <div class="row">
-                                <div class="col">
-                                    <div class="card text-center">
-                                        <div class='card-header'>
-                                            Supported E-Wallet
-                                        </div>
-                                        <div class='card-body'>
-                                            <h1>{{ $ewallet['count'] }}</h1>
-                                        </div>
-                                        <div class='card-footer'>
-                                            <a href="{{ $ewallet['route'] }}">Detail</a>
-                                        </div>
-                                    </div>
+                            <div class="card text-center mb-3">
+                                <div class='card-header'>
+                                    Supported E-Wallet
                                 </div>
-                                <div class="col">
-                                    <div class="card text-center">
-                                        <div class='card-header'>
-                                            Pengguna
-                                        </div>
-                                        <div class='card-body'>
-                                            <h1>{{ $user['count'] }}</h1>
-                                        </div>
-                                        <div class='card-footer'>
-                                            <a href="{{ $user['route'] }}">Detail</a>
-                                        </div>
-                                    </div>
+                                <div class='card-body'>
+                                    <h1>{{ $ewallet['count'] }}</h1>
+                                </div>
+                                <div class='card-footer'>
+                                    <a href="{{ $ewallet['route'] }}">Detail</a>
                                 </div>
                             </div>
+
+                            <div class="card text-center mb-3">
+                                <div class='card-header'>
+                                    Pengguna
+                                </div>
+                                <div class='card-body'>
+                                    <h1>{{ $user['count'] }}</h1>
+                                </div>
+                                <div class='card-footer'>
+                                    <a href="{{ $user['route'] }}">Detail</a>
+                                </div>
+                            </div>
+
+                            <div class="card text-center mb-3">
+                                <div class='card-header'>
+                                    Project
+                                </div>
+                                <div class='card-body'>
+                                    <h1>{{ $project['count'] }}</h1>
+                                </div>
+                                <div class='card-footer'>
+                                    <a href="{{ $project['route'] }}">Detail</a>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 @endsection

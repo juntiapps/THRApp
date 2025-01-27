@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Ewallet;
 use App\Models\Project;
+use App\Models\User;
 use Illuminate\Http\Request;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
@@ -15,6 +17,11 @@ class ProjectController extends Controller
     public function index()
     {
         $data = Project::all();
+
+        $data = $data->map(function ($i) {
+            $i['owner'] = User::find($i->user_id)->name;
+            return $i;
+        });
         return view('admin.projects.index',compact('data'));  
     }
 
@@ -39,9 +46,7 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        $project['qr'] = QrCode::size(300)->generate($project->url);
-        $data = $project;
-        return view('admin.project.show',compact('data'));
+       
     }
 
     /**
@@ -66,6 +71,8 @@ class ProjectController extends Controller
     public function destroy(Project $project)
     {
         $project->delete();
+
+        Ewallet::where('project_id',$project->id)->delete();
 
         return redirect()->route('projects.index')->with('success', 'Data berhasil dihapus!');
     }

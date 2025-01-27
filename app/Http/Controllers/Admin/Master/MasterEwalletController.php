@@ -35,10 +35,12 @@ class MasterEwalletController extends Controller
         $request->validate([
             'name' => 'required|max:255',
             'color' => 'required|regex:/^#[0-9A-Fa-f]{6}$/', // Validasi format hex color
+            'color2' => 'required|regex:/^#[0-9A-Fa-f]{6}$/', // Validasi format hex color
         ]);
 
         $data['name'] = $request->input('name');
         $data['color'] = $request->input('color');
+        $data['color2'] = $request->input('color2');
 
         $create = MasterEwallet::create($data);
 
@@ -70,10 +72,12 @@ class MasterEwalletController extends Controller
         $request->validate([
             'name' => 'required|max:255',
             'color' => 'required|regex:/^#[0-9A-Fa-f]{6}$/', // Validasi format hex color
+            'color2' => 'required|regex:/^#[0-9A-Fa-f]{6}$/', // Validasi format hex color
         ]);
 
         $data['name'] = $request->input('name');
         $data['color'] = $request->input('color');
+        $data['color2'] = $request->input('color2');
 
         $update = $ewallet->update($data);
 

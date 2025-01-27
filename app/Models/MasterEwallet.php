@@ -11,5 +11,5 @@ class MasterEwallet extends Model
 
     protected $table = 'm_ewallet';
 
-    protected $fillable = ['name','color'];
+    protected $fillable = ['name','color','color2'];
 }
