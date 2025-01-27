@@ -869,7 +869,11 @@
                 <ul>
                     @if (Route::has('login'))
                         @auth
-                            <li><a href="{{ url('/home') }}">Home</a></li>
+                            @if (Auth::user()->role == 'admin')
+                                <li><a href="{{ route('admin_home') }}">Home</a></li>
+                            @else
+                                <li><a href="{{ route('user_home') }}">Home</a></li>
+                            @endif
                         @else
                             <li><a href="{{ route('login') }}">Masuk</a></li>
                         @endauth
@@ -886,7 +890,8 @@
                     <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
                         <h2>THRApp</h2>
 
-                        <p>Aplikasi untuk membuat tautan dan kode QR. Support <span class="dana">Dana</span>, <span class="gopay">GoPay</span>, dan <span class="shopee">Shopee Pay</span></p>
+                        <p>Aplikasi untuk membuat tautan dan kode QR. Support <span class="dana">Dana</span>, <span
+                                class="gopay">GoPay</span>, dan <span class="shopee">Shopee Pay</span></p>
                         <div class="d-flex">
                             <a href="{{ route('login') }}" class="btn-get-started">Masuk</a>
                             {{-- <a href="https://www.youtube.com/watch?v=Y7f98aduVJ8"
@@ -905,25 +910,26 @@
     <footer id="footer" class="footer light-background">
 
         <div class="container">
-          <div class="copyright text-center ">
-            <p>© <span>Copyright</span> <strong class="px-1 sitename">JuntiApp</strong> <span>All Rights Reserved</span></p>
-          </div>
-          {{-- <div class="social-links d-flex justify-content-center">
+            <div class="copyright text-center ">
+                <p>© <span>Copyright</span> <strong class="px-1 sitename">JuntiApp</strong> <span>All Rights
+                        Reserved</span></p>
+            </div>
+            {{-- <div class="social-links d-flex justify-content-center">
             <a href=""><i class="bi bi-twitter-x"></i></a>
             <a href=""><i class="bi bi-facebook"></i></a>
             <a href=""><i class="bi bi-instagram"></i></a>
             <a href=""><i class="bi bi-linkedin"></i></a>
           </div> --}}
-          <div class="credits">
-            <!-- All the links in the footer should remain intact. -->
-            <!-- You can delete the links only if you've purchased the pro version. -->
-            <!-- Licensing information: https://bootstrapmade.com/license/ -->
-            <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
-            Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-          </div>
+            <div class="credits">
+                <!-- All the links in the footer should remain intact. -->
+                <!-- You can delete the links only if you've purchased the pro version. -->
+                <!-- Licensing information: https://bootstrapmade.com/license/ -->
+                <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
+                Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+            </div>
         </div>
-    
-      </footer>
+
+    </footer>
     {{-- <div
         class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
         @if (Route::has('login'))
