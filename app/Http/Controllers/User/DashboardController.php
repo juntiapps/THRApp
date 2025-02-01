@@ -140,28 +140,29 @@ class DashboardController extends Controller
 
         DB::beginTransaction();
         $project_id = $project->id;
-        // dd(Ewallet::where([
-        //     'project_id' => $project_id,
-        //     'ewallet_id' => 2,
-        // ])->first());
         $update = $project->update($data);
 
         if ($request->shopee) {
             $update_shopee = Ewallet::where([
                 'project_id' => $project_id,
                 'ewallet_id' => 1,
-            ])->updateOrInsert([
+            ])->first();
+            $update_shopee->delete();
+            Ewallet::create([
                 'project_id' => $project_id,
                 'ewallet_id' => 1,
                 'url' => $request->shopee
             ]);
+            
         }
 
         if ($request->dana) {
             $update_dana = Ewallet::where([
                 'project_id' => $project_id,
                 'ewallet_id' => 2,
-            ])->updateOrInsert([
+            ])->first();
+            $update_dana->delete();
+             Ewallet::create([
                 'project_id' => $project_id,
                 'ewallet_id' => 2,
                 'url' => $request->dana
@@ -172,7 +173,9 @@ class DashboardController extends Controller
             $update_gopay = Ewallet::where([
                 'project_id' => $project_id,
                 'ewallet_id' => 3,
-            ])->updateOrInsert([
+            ])->first();
+            $update_gopay->delete();
+             Ewallet::create([
                 'project_id' => $project_id,
                 'ewallet_id' => 3,
                 'url' => $request->gopay

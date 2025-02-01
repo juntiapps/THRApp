@@ -20,11 +20,7 @@
                         <a class="border border-primary rounded px-4 py-3" href="{{ route('u.projects.create') }}">
                             <i class="fas fa-plus"></i>
                         </a>
-                        @if (session('status'))
-                            <div class="alert alert-success my-2" role="alert">
-                                {{ session('status') }}
-                            </div>
-                        @endif
+                       <br><br>
                         <table class="table" id="projects">
                             <thead>
                                 <tr>

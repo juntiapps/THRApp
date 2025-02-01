@@ -35,7 +35,7 @@
                             @if (isset($data->qr))
                                 <div class="mt-4 text-center">
                                     <div id="qrcode" class="p-4 d-inline-block">
-                                        <h3>Scan THR</h3>
+                                        <h3>{{ $data->name }}</h3>
                                         {!! $data->qr !!}
                                     </div>
                                     <br>
