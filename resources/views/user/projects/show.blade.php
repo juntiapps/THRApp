@@ -16,15 +16,18 @@
 
                             <label for="shopee">URL Shopee Angpao/THR:</label><br>
                             <input class="form-control" type="text" id="shopee" name="shopee" disabled
-                                value="{{ old('shopee', $data->shopee) }}"><br><br>
+                                value="{{ old('shopee', $data->shopee) }}">
+                            <p>Telah diklik : {{ $count['s'] }}</p><br><br>
 
                             <label for="dana">URL Dana Kaget:</label><br>
                             <input class="form-control" type="text" id="dana" name="dana" disabled
-                                value="{{ old('dana', $data->dana) }}"><br><br>
+                                value="{{ old('dana', $data->dana) }}">
+                            <p>Telah diklik : {{ $count['d'] }}</p><br><br>
 
                             <label for="gopay">URL GoPay Angpao:</label><br>
                             <input class="form-control" type="text" id="gopay" name="gopay" disabled
-                                value="{{ old('gopay', $data->gopay) }}"><br><br>
+                                value="{{ old('gopay', $data->gopay) }}">
+                            <p>Telah diklik : {{ $count['g'] }}</p><br><br>
 
                             <label for="url">URL:</label><br>
                             <input class="form-control" type="url" id="url" name="url" readonly

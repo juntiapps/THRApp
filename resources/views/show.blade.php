@@ -7,7 +7,7 @@
 
     <title>THRApp</title>
     <meta name="description" content="Aplikasi THR">
-    <meta name="keywords" content="thr,shopeepay,gopay,dana">
+    <meta name="keywords" content="thr,shopeepay,gopay,dana,angpao">
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
@@ -20,6 +20,9 @@
 
     <!-- Main CSS File -->
     <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet">
+
+    @vite(['resources/sass/app.scss', 'resources/css/app.css', 'resources/js/app.js'])
+
     <style>
         .dana {
             color: #118ee9;
@@ -37,7 +40,6 @@
         }
     </style>
 </head>
-{{-- {{dd($data)}} --}}
 
 <body class="antialiased">
     <header id="header" class="header d-flex align-items-center sticky-top">
@@ -70,9 +72,10 @@
                     <h2>{{ $data->name }}</h2>
 
                     <p>Silakan Pilih Salah Satu</p>
-
                     @foreach ($data->ewallet as $item)
-                        <a href="{{ $item->url }}" style="background-color:{{ $item->color }}; color:{{$item->color2}};" class="form-control">
+                        <a href="{{ $item->url }}"
+                            style="background-color:{{ $item->color }}; color:{{ $item->color2 }};"
+                            class="form-control btn btn-lg link" data-id="{{ $item->id }}" target="_blank">
                             {{ $item->ewallet_name }}</a>
                     @endforeach
                 </div>
@@ -116,6 +119,36 @@
 
     <!-- Main JS File -->
     <script src="{{ asset('assets/js/main.js') }}"></script>
+    <script src="//code.jquery.com/jquery-3.7.1.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('.link').click(function(e) {
+                e.preventDefault();
+
+                var $this = $(this);
+                var id = $this.data('id');
+                var link = $this.attr('href');
+
+                $.ajax({
+                    url: "{{ route('click_count') }}",
+                    method: 'POST',
+                    data: {
+                        url_id: id,
+                        // ... other data if needed
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(response) {
+                        // console.log(response);
+                        window.open(link, '_blank');
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

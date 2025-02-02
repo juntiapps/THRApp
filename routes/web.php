@@ -26,6 +26,7 @@ Auth::routes();
 
 Route::get('/', [GuestController::class, 'index']);
 Route::get('/projects/{id}', [GuestController::class, 'show'])->name('show_project');
+Route::post('/click', [GuestController::class, 'counter'])->name('click_count');
 
 
 Route::get('/login/google', [SocialiteController::class, 'redirectToGoogle'])->name('login.google');

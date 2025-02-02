@@ -20,6 +20,8 @@
 
     <!-- Main CSS File -->
     <link href="{{ asset('assets/css/main.css') }}" rel="stylesheet">
+    @vite(['resources/sass/app.scss','resources/css/app.css', 'resources/js/app.js'])
+
     <!-- Styles -->
     {{-- <style>
         /* ! tailwindcss v3.2.4 | MIT License | https://tailwindcss.com */

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\ClickLog;
 use App\Models\Ewallet;
 use App\Models\MasterEwallet;
 use App\Models\Project;
@@ -102,8 +103,12 @@ class DashboardController extends Controller
         $project->dana = $d != null ? $d->url : $d;
         $project->gopay = $g != null ? $g->url : $g;
 
+        $count['s'] = $s != null ? ClickLog::where('url_id', $s->id)->count() : '-';
+        $count['d'] = $d != null ? ClickLog::where('url_id', $d->id)->count() : '-';
+        $count['g'] = $g != null ? ClickLog::where('url_id', $g->id)->count() : '-';
+
         $data = $project;
-        return view('user.projects.show', compact('data'));
+        return view('user.projects.show', compact('data', 'count'));
     }
 
     public function edit(Project $project)
@@ -135,8 +140,6 @@ class DashboardController extends Controller
         }
 
         $data['name'] = $request->input('name');
-        // $data['user_id'] = $user->id;
-
 
         DB::beginTransaction();
         $project_id = $project->id;
@@ -147,13 +150,17 @@ class DashboardController extends Controller
                 'project_id' => $project_id,
                 'ewallet_id' => 1,
             ])->first();
-            $update_shopee->delete();
-            Ewallet::create([
-                'project_id' => $project_id,
-                'ewallet_id' => 1,
-                'url' => $request->shopee
-            ]);
-            
+
+            if ($update_shopee) {
+                $update_shopee->url = $request->shopee;
+                $update_shopee->save();
+            } else {
+                Ewallet::create([
+                    'project_id' => $project_id,
+                    'ewallet_id' => 1,
+                    'url' => $request->shopee
+                ]);
+            }
         }
 
         if ($request->dana) {
@@ -161,12 +168,17 @@ class DashboardController extends Controller
                 'project_id' => $project_id,
                 'ewallet_id' => 2,
             ])->first();
-            $update_dana->delete();
-             Ewallet::create([
-                'project_id' => $project_id,
-                'ewallet_id' => 2,
-                'url' => $request->dana
-            ]);
+
+            if ($update_dana) {
+                $update_dana->url = $request->dana;
+                $update_dana->save();
+            } else {
+                Ewallet::create([
+                    'project_id' => $project_id,
+                    'ewallet_id' => 1,
+                    'url' => $request->dana
+                ]);
+            }
         }
 
         if ($request->gopay) {
@@ -174,12 +186,17 @@ class DashboardController extends Controller
                 'project_id' => $project_id,
                 'ewallet_id' => 3,
             ])->first();
-            $update_gopay->delete();
-             Ewallet::create([
-                'project_id' => $project_id,
-                'ewallet_id' => 3,
-                'url' => $request->gopay
-            ]);
+
+            if ($update_gopay) {
+                $update_gopay->url = $request->gopay;
+                $update_gopay->save();
+            } else {
+                Ewallet::create([
+                    'project_id' => $project_id,
+                    'ewallet_id' => 3,
+                    'url' => $request->gopay
+                ]);
+            }
         }
 
         DB::commit();
@@ -216,7 +233,7 @@ class DashboardController extends Controller
             $delete_ewallet = Ewallet::where('project_id', $project->id)->delete();
         }
 
-        if(count($projects)>0){
+        if (count($projects) > 0) {
             $projects->delete();
         }
 
