@@ -213,6 +213,28 @@ class DashboardController extends Controller
         return redirect()->route('user_home')->with('success', 'Data berhasil dihapus!');
     }
 
+    public function visitor(Project $project) {
+        $d = Ewallet::where(['project_id' => $project->id])->get();
+        $d = $d->map(function ($item) {
+            return $item->id;
+        });
+        $data['log'] = ClickLog::whereIn('url_id',$d)->get();
+        $data['project_id'] = $project->id;
+        
+        return view('user.projects.visitor',compact('data'));
+    }
+
+    public function destroyIP($project_id,$id)
+    {
+        // dd($log);
+        $log = ClickLog::find($id);
+        DB::beginTransaction();
+        $log->delete();
+        DB::commit();
+
+        return redirect()->route('u.projects.visitor',$project_id)->with('success', 'Data berhasil dihapus!');
+    }
+
     public function setting()
     {
         $data = Auth::user();

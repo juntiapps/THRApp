@@ -56,6 +56,8 @@ Route::group(['middleware' => ['auth', 'user',], 'prefix' => 'user'], function (
         Route::get('{project}', [UserDashboard::class, 'show'])->name('u.projects.show');
         Route::put('{project}', [UserDashboard::class, 'update'])->name('u.projects.update');
         Route::delete('{project}', [UserDashboard::class, 'destroy'])->name('u.projects.destroy');
+        Route::delete('{project}/visitor/{log_id}', [UserDashboard::class, 'destroyIP'])->name('u.projects.destroyip');
+        Route::get('{project}/visitor', [UserDashboard::class, 'visitor'])->name('u.projects.visitor');
     });
 });
 

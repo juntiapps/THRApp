@@ -29,8 +29,15 @@ class GuestController extends Controller
             $value->ewallet_name = $mwall->name;
         }
 
+        $ip = ClickLog::where('ip', request()->ip())->first();
+
         $data['ewallet'] = $ewallet;
-        return view('show', compact('data'));
+        $data['visited'] = $ip ? true : false;
+
+        return response()->view('show', compact('data'))
+            ->header('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0')
+            ->header('Pragma', 'no-cache')
+            ->header('Expires', '0');
     }
 
     public function counter(Request $request)
@@ -43,7 +50,8 @@ class GuestController extends Controller
             //code...
             DB::beginTransaction();
             $save = ClickLog::create([
-                'url_id' => $request->url_id
+                'url_id' => $request->url_id,
+                'ip' => request()->ip()
             ]);
 
             DB::commit();

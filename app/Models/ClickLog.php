@@ -10,5 +10,5 @@ class ClickLog extends Model
     use HasFactory;
 
     protected $table = 'click_log';
-    protected $fillable = ['url_id'];
+    protected $fillable = ['url_id','ip'];
 }

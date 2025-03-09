@@ -68,17 +68,24 @@
     <main class="main">
         <section id="hero" class="hero section light-background">
             <div class="container position-relative p-5" data-aos="fade-up" data-aos-delay="100">
-                <div class="row gy-5 text-center">
-                    <h2>{{ $data->name }}</h2>
+                @if ($data['visited'])
+                    <div class="row gy-5 text-center">
+                        <h2>Anda Sudah Mengklaim THR Anda</h2>
+                        <h3>Terima Kasih Sudah Berpartisipasi</h2>
+                    </div>
+                @else
+                    <div class="row gy-5 text-center">
+                        <h2>{{ $data->name }}</h2>
 
-                    <p>Silakan Pilih Salah Satu</p>
-                    @foreach ($data->ewallet as $item)
-                        <a href="{{ $item->url }}"
-                            style="background-color:{{ $item->color }}; color:{{ $item->color2 }};"
-                            class="form-control btn btn-lg link" data-id="{{ $item->id }}" target="_blank">
-                            {{ $item->ewallet_name }}</a>
-                    @endforeach
-                </div>
+                        <p>Silakan Pilih Salah Satu</p>
+                        @foreach ($data->ewallet as $item)
+                            <a href="{{ $item->url }}"
+                                style="background-color:{{ $item->color }}; color:{{ $item->color2 }};"
+                                class="form-control btn btn-lg link" data-id="{{ $item->id }}">
+                                {{ $item->ewallet_name }}</a>
+                        @endforeach
+                    </div>
+                @endif
             </div>
         </section>
     </main>
@@ -129,18 +136,20 @@
                 var $this = $(this);
                 var id = $this.data('id');
                 var link = $this.attr('href');
+                var url = "{{ route('click_count') }}";
+                var token = "{{ csrf_token() }}";
 
                 $.ajax({
-                    url: "{{ route('click_count') }}",
+                    url: url,
                     method: 'POST',
                     data: {
                         url_id: id,
                         // ... other data if needed
-                        _token: "{{ csrf_token() }}"
+                        _token: token
                     },
                     success: function(response) {
                         // console.log(response);
-                        window.open(link, '_blank');
+                        window.open(link, '_self');
                     },
                     error: function(error) {
                         console.log(error);

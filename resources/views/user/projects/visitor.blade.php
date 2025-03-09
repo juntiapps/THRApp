@@ -5,7 +5,7 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">{{ __('Dashboard') }}</div>
+                    <div class="card-header">{{ __('Visitor') }}</div>
 
                     <div class="card-body">
                         @if (session('success'))
@@ -13,42 +13,23 @@
                                 {{ session('success') }}
                             </div>
                         @endif
-
-                        <h5>Selamat Datang, <span style="font-weight:bold">{{ $data['name'] }}</span></h5>
-                        <hr>
-                        <div style="height: 20px"></div>
-                        <a class="border border-primary rounded px-4 py-3" href="{{ route('u.projects.create') }}">
-                            <i class="fas fa-plus"></i>
-                        </a>
-                       <br><br>
                         <table class="table" id="projects">
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Nama</th>
+                                    <th scope="col">IP Adress</th>
                                     <th scope="col">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($data['projects'] as $index => $item)
+                                @forelse ($data['log'] as $index => $item)
                                     <tr>
                                         <td> {{ $index + 1 }}</td>
-                                        <td> {{ $item->name }}</td>
+                                        <td> {{ $item->ip }}</td>
                                         <td class="text-center">
-                                            <a href="{{ route('u.projects.show', $item->id) }}"
-                                                class="btn btn-sm btn-info">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                            <a href="{{ route('u.projects.edit', $item->id) }}"
-                                                class="btn btn-sm btn-warning">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <a href="{{ route('u.projects.visitor', $item->id) }}"
-                                                class="btn btn-sm btn-success">
-                                                <i class="fas fa-chart-area"></i>
-                                            </a>
-                                            <form action="{{ route('u.projects.destroy', $item->id) }}" method="POST"
-                                                style="display: inline-block;">
+                                            <form
+                                                action="{{ route('u.projects.destroyip', ['project' => $data['project_id'], 'log_id' => $item->id]) }}"
+                                                method="POST" style="display: inline-block;">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-sm btn-danger"
@@ -63,6 +44,7 @@
 
                             </tbody>
                         </table>
+
                     </div>
                 </div>
             </div>
