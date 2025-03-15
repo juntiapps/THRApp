@@ -47,7 +47,7 @@
 
             <a href="/" class="logo d-flex align-items-center">
                 <!-- Uncomment the line below if you also wish to use an image logo -->
-                <img src="{{ asset('assets/logo.jpg') }}" alt="">
+                <img src="{{ asset('assets/logo.png') }}" alt="">
                 <h1 class="sitename"><span>THR</span>App</h1>
             </a>
 

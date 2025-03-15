@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
         integrity="..." crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    @vite(['resources/sass/app.scss','resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/sass/app.scss', 'resources/css/app.css', 'resources/js/app.js'])
 
     @stack('head')
 </head>
@@ -25,11 +25,13 @@
             <div class="container">
                 @guest
                     <a class="navbar-brand" href="">
+                        <img src="{{ asset('assets/logo.png') }}" alt="" width="30" height="30" class="d-inline-block align-text-top">
                         {{ config('app.name', 'Laravel') }}
                     </a>
                 @else
                     <a class="navbar-brand"
                         href="{{ Auth::user()->role == 'admin' ? route('admin_home') : route('user_home') }}">
+                        <img src="{{ asset('assets/logo.png') }}" alt="" width="30" height="30" class="d-inline-block align-text-top">
                         {{ config('app.name', 'Laravel') }}
                     </a>
                 @endguest

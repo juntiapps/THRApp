@@ -863,7 +863,7 @@
 
             <a href="/" class="logo d-flex align-items-center">
                 <!-- Uncomment the line below if you also wish to use an image logo -->
-                <img src="{{ asset('assets/logo.jpg') }}" alt="">
+                <img src="{{ asset('assets/logo.png') }}" alt="">
                 <h1 class="sitename"><span>THR</span>App</h1>
             </a>
 
@@ -902,7 +902,7 @@
                         </div>
                     </div>
                     <div class="col-lg-6 order-1 order-lg-2">
-                        <img src="{{ asset('assets/logo.jpg') }}" class="img-fluid" alt="">
+                        <img src="{{ asset('assets/logo.png') }}" class="img-fluid" alt="">
                     </div>
                 </div>
             </div>
