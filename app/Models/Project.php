@@ -12,5 +12,5 @@ class Project extends Model
     use HasFactory;
     use HasUuids; // Tambahkan trait ini
 
-    protected $fillable = ['name','url','user_id'];
+    protected $fillable = ['name','url','user_id','filter_ip'];
 }

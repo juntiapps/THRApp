@@ -32,7 +32,12 @@ class GuestController extends Controller
         $ip = ClickLog::where('ip', request()->ip())->first();
 
         $data['ewallet'] = $ewallet;
-        $data['visited'] = $ip ? true : false;
+
+        if ($data['filter_ip'] == 1) {
+            $data['visited'] = $ip ? true : false;
+        } else {
+            $data['visited'] = false;
+        }
 
         return response()->view('show', compact('data'))
             ->header('Cache-Control', 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0')

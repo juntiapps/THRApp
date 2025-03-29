@@ -107,8 +107,10 @@ class DashboardController extends Controller
         $count['d'] = $d != null ? ClickLog::where('url_id', $d->id)->count() : '-';
         $count['g'] = $g != null ? ClickLog::where('url_id', $g->id)->count() : '-';
 
+        $filter_ip = $project->filter_ip != 1 ? 'disabled' : 'checked disabled';
+
         $data = $project;
-        return view('user.projects.show', compact('data', 'count'));
+        return view('user.projects.show', compact('data', 'count', 'filter_ip'));
     }
 
     public function edit(Project $project)
@@ -122,7 +124,10 @@ class DashboardController extends Controller
         $project->gopay = $g != null ? $g->url : $g;
 
         $data = $project;
-        return view('user.projects.edit', compact('data'));
+
+        $filter_ip = $project->filter_ip != 1 ? '' : 'checked';
+
+        return view('user.projects.edit', compact('data', 'filter_ip'));
     }
 
     public function update(Request $request, Project $project)
@@ -133,13 +138,20 @@ class DashboardController extends Controller
             'shopee' => 'nullable|url',
             'dana' => 'nullable|url',
             'gopay' => 'nullable|url',
+            // 'filter_ip' => 'integer|in:0,1'
         ]);
-
+        // dd($request['filter_ip']);
         if (!$request->shopee && !$request->dana && !$request->gopay) {
             return redirect()->route('u.projects.edit', $project)->with('error', 'Salah satu URL harus diisi!');
         }
 
         $data['name'] = $request->input('name');
+
+        if (isset($request['filter_ip']) && $request['filter_ip'] == 'on') {
+            $data['filter_ip'] = 1;
+        } else {
+            $data['filter_ip'] = 0;
+        }
 
         DB::beginTransaction();
         $project_id = $project->id;
@@ -213,18 +225,19 @@ class DashboardController extends Controller
         return redirect()->route('user_home')->with('success', 'Data berhasil dihapus!');
     }
 
-    public function visitor(Project $project) {
+    public function visitor(Project $project)
+    {
         $d = Ewallet::where(['project_id' => $project->id])->get();
         $d = $d->map(function ($item) {
             return $item->id;
         });
-        $data['log'] = ClickLog::whereIn('url_id',$d)->get();
+        $data['log'] = ClickLog::whereIn('url_id', $d)->get();
         $data['project_id'] = $project->id;
-        
-        return view('user.projects.visitor',compact('data'));
+
+        return view('user.projects.visitor', compact('data'));
     }
 
-    public function destroyIP($project_id,$id)
+    public function destroyIP($project_id, $id)
     {
         // dd($log);
         $log = ClickLog::find($id);
@@ -232,7 +245,7 @@ class DashboardController extends Controller
         $log->delete();
         DB::commit();
 
-        return redirect()->route('u.projects.visitor',$project_id)->with('success', 'Data berhasil dihapus!');
+        return redirect()->route('u.projects.visitor', $project_id)->with('success', 'Data berhasil dihapus!');
     }
 
     public function setting()
