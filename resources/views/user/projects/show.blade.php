@@ -54,6 +54,7 @@
                             {{-- <button class="form-control btn btn-primary" type="submit">Submit</button> --}}
                         </form>
                         <button id="downloadBtn" class="form-control btn btn-success mb-2">Download QR Code (PNG)</button>
+                        <button id="shareBtn" class="form-control btn btn-primary mb-2">Share QR Code</button>
                         <a href="{{ route('user_home') }}" class="form-control btn btn-secondary">Kembali</a>
 
                     </div>
@@ -67,6 +68,18 @@
     <script src="//code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
+        function dataURLToBlob(dataURL) {
+            var parts = dataURL.split(';base64,');
+            var contentType = parts[0].split(':')[1];
+            var raw = window.atob(parts[1]);
+            var rawLength = raw.length;
+            var uInt8Array = new Uint8Array(rawLength);
+            for (var i = 0; i < rawLength; ++i) {
+                uInt8Array[i] = raw.charCodeAt(i);
+            }
+            return new Blob([uInt8Array], { type: contentType });
+        }
+
         $(document).ready(function() {
             $('#downloadBtn').click(function() {
                 html2canvas($('#qrcode')[0]).then(function(canvas) {
@@ -76,6 +89,50 @@
                     link.click();
                 });
             });
+
+            $('#shareBtn').click(function() {
+                html2canvas($('#qrcode')[0]).then(function(canvas) {
+                    canvas.toBlob(function(blob) {
+                        var shareData = {
+                            title: '{{ $data->name }} QR Code',
+                            text: 'QR Code untuk {{ $data->name }}',
+                        };
+
+                        try {
+                            var file = new File([blob], 'qrcode.png', { type: 'image/png' });
+                            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                                shareData.files = [file];
+                                navigator.share(shareData).catch(function(err) {
+                                    console.error('Share failed:', err);
+                                    alert('Gagal melakukan share via API browser. Sedang membuka link copy fallback.');
+                                    copyUrlFallback();
+                                });
+                                return;
+                            }
+                        } catch (e) {
+                            console.warn('Web Share File API tidak tersedia', e);
+                        }
+
+                        if (navigator.share) {
+                            shareData.url = $('#url').val();
+                            navigator.share(shareData).catch(function(err) {
+                                console.error('Share failed:', err);
+                                alert('Share tidak berhasil, salin URL manual');
+                            });
+                        } else {
+                            copyUrlFallback();
+                        }
+                    }, 'image/png');
+                });
+            });
+
+            function copyUrlFallback() {
+                var $url = $('#url');
+                $url.prop('disabled', false).select();
+                document.execCommand('copy');
+                $url.prop('disabled', true);
+                alert('URL QR telah disalin ke clipboard: ' + $('#url').val());
+            }
         });
     </script>
 @endpush
