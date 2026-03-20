@@ -30,8 +30,9 @@
                             <p>Telah diklik : {{ $count['g'] }}</p>
 
                             {{-- <div class="form-check form-switch"> --}}
-                                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" {{$filter_ip}}>
-                                <label class="form-check-label" for="flexSwitchCheckDefault">Filter IP Address</label>
+                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
+                                {{ $filter_ip }}>
+                            <label class="form-check-label" for="flexSwitchCheckDefault">Filter IP Address</label>
                             {{-- </div> --}}
                             <br><br>
 
@@ -46,6 +47,8 @@
                                     <div id="qrcode" class="p-4 d-inline-block">
                                         <h3>{{ $data->name }}</h3>
                                         {!! $data->qr !!}
+                                        <p class="mb-0">Mau bikin ? kunjungi :</p>
+                                        <a href="https://thr.juntiapp.com">https://thr.juntiapp.com</a>
                                     </div>
                                     <br>
                                 </div>
@@ -77,7 +80,9 @@
             for (var i = 0; i < rawLength; ++i) {
                 uInt8Array[i] = raw.charCodeAt(i);
             }
-            return new Blob([uInt8Array], { type: contentType });
+            return new Blob([uInt8Array], {
+                type: contentType
+            });
         }
 
         $(document).ready(function() {
@@ -95,16 +100,21 @@
                     canvas.toBlob(function(blob) {
                         var shareData = {
                             title: '{{ $data->name }} QR Code',
-                            text: 'QR Code untuk {{ $data->name }}',
+                            text: 'QR Code untuk {{ $data->name }}. Mau bikin juga? kunjungi https://thr.juntiapp.com',
                         };
 
                         try {
-                            var file = new File([blob], 'qrcode.png', { type: 'image/png' });
-                            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                            var file = new File([blob], 'qrcode.png', {
+                                type: 'image/png'
+                            });
+                            if (navigator.canShare && navigator.canShare({
+                                    files: [file]
+                                })) {
                                 shareData.files = [file];
                                 navigator.share(shareData).catch(function(err) {
                                     console.error('Share failed:', err);
-                                    alert('Gagal melakukan share via API browser. Sedang membuka link copy fallback.');
+                                    alert(
+                                        'Gagal melakukan share via API browser. Sedang membuka link copy fallback.');
                                     copyUrlFallback();
                                 });
                                 return;
