@@ -153,34 +153,13 @@
                         _token: token
                     },
                     success: function(response) {
-                        if (response.status == 1) {
-                            window.open(link, '_self');
-                        } else {
-                            alert(response.msg);
-                        }
+                        // console.log(response);
+                        window.open(link, '_self');
                     },
                     error: function(error) {
                         console.log(error);
                     }
                 });
-            });
-
-            // Larangan membuka link di new tab via klik kanan
-            $('.link').on('contextmenu', function(e) {
-                e.preventDefault();
-                alert('Tidak diperbolehkan membuka link di tab baru');
-            });
-
-            // Larangan long press di mobile
-            $('.link').on('touchstart', function(e) {
-                var $this = $(this);
-                longPressTimer = setTimeout(function() {
-                    alert('Tidak diperbolehkan long press pada link');
-                }, 500); // 500ms untuk long press
-            });
-
-            $('.link').on('touchend touchmove', function(e) {
-                clearTimeout(longPressTimer);
             });
         });
     </script>
