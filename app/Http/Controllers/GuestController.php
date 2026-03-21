@@ -62,9 +62,11 @@ class GuestController extends Controller
             ->join('ewallets', 'click_log.url_id', '=', 'ewallets.id')
             ->where('ewallets.project_id', $request->project_id)
             ->first();
+        
+            $ip = request()->ip();
 
         if ($existing) {
-            return response()->json(['status' => 0, 'msg' => "Anda sudah menggunakan salah satu link dari project ini. url_id $request->url_id project_id $request->project_id"]);
+            return response()->json(['status' => 0, 'msg' => "Anda sudah menggunakan salah satu link dari project ini. ip $ip url_id $request->url_id project_id $request->project_id"]);
         }
 
         try {
