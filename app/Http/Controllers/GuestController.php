@@ -39,7 +39,7 @@ class GuestController extends Controller
         // dd($ip,$data);
 
         if ($data['filter_ip'] == 1) {
-            $data['visited'] = $ip ? true : false;
+            $data['visited'] = $ip ? false : true;
         } else {
             $data['visited'] = false;
         }
