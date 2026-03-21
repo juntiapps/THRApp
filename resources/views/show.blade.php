@@ -131,6 +131,7 @@
     <script>
         $(document).ready(function() {
             var longPressTimer;
+            var project_id = '{{ $data->id }}';
 
             $('.link').click(function(e) {
                 e.preventDefault();
@@ -146,6 +147,7 @@
                     method: 'POST',
                     data: {
                         url_id: id,
+                        project_id: project_id,
                         // ... other data if needed
                         _token: token
                     },

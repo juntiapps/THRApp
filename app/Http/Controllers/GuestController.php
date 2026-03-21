@@ -33,6 +33,8 @@ class GuestController extends Controller
 
         $data['ewallet'] = $ewallet;
 
+        // dd($ip,$data);
+
         if ($data['filter_ip'] == 1) {
             $data['visited'] = $ip ? true : false;
         } else {
@@ -48,13 +50,18 @@ class GuestController extends Controller
     public function counter(Request $request)
     {
         $request->validate([
-            'url_id' => 'integer|required'
+            'url_id' => 'integer|required',
+            'project_id' => 'string|required'
         ]);
 
-        // Cek apakah IP sudah pernah klik link mana pun
-        $existing = ClickLog::where('ip', request()->ip())->first();
+        // Cek apakah IP sudah pernah klik link dari project yang sama
+        $existing = ClickLog::where('ip', request()->ip())
+            ->join('ewallets', 'click_log.url_id', '=', 'ewallets.id')
+            ->where('ewallets.project_id', $request->project_id)
+            ->first();
+
         if ($existing) {
-            return response()->json(['status' => 0, 'msg' => 'Anda sudah menggunakan salah satu link tersebut']);
+            return response()->json(['status' => 0, 'msg' => 'Anda sudah menggunakan salah satu link dari project ini']);
         }
 
         try {
