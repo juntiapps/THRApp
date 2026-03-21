@@ -29,7 +29,10 @@ class GuestController extends Controller
             $value->ewallet_name = $mwall->name;
         }
 
-        $ip = ClickLog::where('ip', request()->ip())->first();
+        $ip = ClickLog::where('ip', request()->ip())
+            ->join('ewallets', 'click_log.url_id', '=', 'ewallets.id')
+            ->where('ewallets.project_id', $id)
+            ->first();
 
         $data['ewallet'] = $ewallet;
 
