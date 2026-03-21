@@ -35,6 +35,7 @@ class GuestController extends Controller
             ->first();
 
         $data['ewallet'] = $ewallet;
+        $data['ip']=request()->ip();
 
         // dd($ip,$data);
 
