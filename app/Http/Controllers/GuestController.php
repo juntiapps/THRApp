@@ -64,7 +64,7 @@ class GuestController extends Controller
             ->first();
 
         if ($existing) {
-            return response()->json(['status' => 0, 'msg' => 'Anda sudah menggunakan salah satu link dari project ini']);
+            return response()->json(['status' => 0, 'msg' => "Anda sudah menggunakan salah satu link dari project ini. url_id $request->url_id project_id $request->project_id"]);
         }
 
         try {
