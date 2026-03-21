@@ -55,7 +55,7 @@
                 <ul>
                     @if (Route::has('login'))
                         @auth
-                            <li><a href="{{ url('/home') }}">Home</a></li>
+                            <li><a href="{{ url('/user/home') }}">Home</a></li>
                         @else
                             <li><a href="{{ route('login') }}">Masuk</a></li>
                         @endauth
@@ -86,6 +86,7 @@
                         @endforeach
                     </div>
                 @endif
+                <p class="mt-4">{{$data->ip}}</p>
             </div>
         </section>
     </main>
