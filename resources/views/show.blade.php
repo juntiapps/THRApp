@@ -86,7 +86,7 @@
                         @endforeach
                     </div>
                 @endif
-                <p class="mt-4">{{$data->ip}}</p>
+                <p class="mt-4">{{ $data->ip }}</p>
             </div>
         </section>
     </main>
@@ -132,7 +132,6 @@
     <script>
         $(document).ready(function() {
             var longPressTimer;
-            var project_id = '{{ $data->id }}';
 
             $('.link').click(function(e) {
                 e.preventDefault();
@@ -148,7 +147,6 @@
                     method: 'POST',
                     data: {
                         url_id: id,
-                        project_id: project_id,
                         // ... other data if needed
                         _token: token
                     },
@@ -160,6 +158,23 @@
                         console.log(error);
                     }
                 });
+            });
+
+            $('.link').on('contextmenu', function(e) {
+                e.preventDefault();
+                alert('Tidak diperbolehkan membuka link di tab baru');
+            });
+
+            // Larangan long press di mobile
+            $('.link').on('touchstart', function(e) {
+                var $this = $(this);
+                longPressTimer = setTimeout(function() {
+                    alert('Tidak diperbolehkan long press pada link');
+                }, 500); // 500ms untuk long press
+            });
+
+            $('.link').on('touchend touchmove', function(e) {
+                clearTimeout(longPressTimer);
             });
         });
     </script>

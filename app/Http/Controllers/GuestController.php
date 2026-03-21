@@ -29,10 +29,7 @@ class GuestController extends Controller
             $value->ewallet_name = $mwall->name;
         }
 
-        $ip = ClickLog::where('ip', request()->ip())
-            ->join('ewallets', 'click_log.url_id', '=', 'ewallets.id')
-            ->where('ewallets.project_id', $id)
-            ->first();
+        $ip = ClickLog::where('ip', request()->ip())->first();
 
         $data['ewallet'] = $ewallet;
         $data['ip']=request()->ip();
@@ -40,7 +37,7 @@ class GuestController extends Controller
         // dd($ip,$data);
 
         if ($data['filter_ip'] == 1) {
-            $data['visited'] = $ip ? false : true;
+            $data['visited'] = $ip ? true : false;
         } else {
             $data['visited'] = false;
         }
@@ -55,7 +52,6 @@ class GuestController extends Controller
     {
         $request->validate([
             'url_id' => 'integer|required',
-            'project_id' => 'string|required'
         ]);
 
         try {
