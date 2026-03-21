@@ -51,6 +51,12 @@ class GuestController extends Controller
             'url_id' => 'integer|required'
         ]);
 
+        // Cek apakah IP sudah pernah klik link mana pun
+        $existing = ClickLog::where('ip', request()->ip())->first();
+        if ($existing) {
+            return response()->json(['status' => 0, 'msg' => 'Anda sudah menggunakan salah satu link tersebut']);
+        }
+
         try {
             //code...
             DB::beginTransaction();
